@@ -1,9 +1,7 @@
 var socket = io();
 
 
-
-
-const params =  new URLSearchParams( window.location.search );
+var params =  new URLSearchParams( window.location.search );
 
 if ( !params.has('nombre') || !params.has('sala')) {
     window.location = 'index.html';
@@ -25,6 +23,7 @@ socket.on('connect', function() {
 
     socket.emit('entrar-Chat', usuario, function( resp ) {
         console.log('Usuarios Conectados', resp);
+        renderizarUsuarios(resp);
     });
 });
 
@@ -41,7 +40,7 @@ socket.on('disconnect', function() {
 
 // Enviar información
 // socket.emit('crear-mensaje', {
-//     usuario: 'Fernando',
+//     usuario: 'Jorge',
 //     mensaje: 'Hola Mundo'
 // }, function(resp) {
 //     console.log('respuesta server: ', resp);
@@ -53,6 +52,8 @@ socket.on('disconnect', function() {
 // Escuchar información
 socket.on('crear-mensaje', function(mensaje) {
     console.log('Servidor:', mensaje);
+    renderizarMensajes( mensaje, false );
+    scrollBottom();
 });
 
 
@@ -60,7 +61,8 @@ socket.on('crear-mensaje', function(mensaje) {
 
 //Escuchar cuando un usuario entra o sale de las salas
 socket.on('lista-persona', function(personas) {
-    console.log( personas );
+    console.log(personas);
+    renderizarUsuarios(personas );
 });
 
 
